@@ -31,18 +31,14 @@ class InventarioRepository:
                 for item in dados:
                     # Instanciação dinâmica (POO)
                     tipo_enum = TipoEquipamento(item["tipo"]) #LÊ O ARQUIVO EM BUSCA DO TIPO DO EQUIPAMENTO
-                    if tipo_enum == TipoEquipamento.APLICACAO_WEB:
-                        eq = ServidorWeb(item["id_equip"], item["nome"], item["responsavel"], item["setor"],
-                                         tipo_enum)
+                    if tipo_enum == TipoEquipamento.SERVIDOR:
+                        eq = ServidorWeb(item["id_equip"], item["nome"], item["responsavel"], item["setor"], tipo_enum)
                     elif tipo_enum == TipoEquipamento.BANCO_DADOS:
-                        eq = BancoDados(item["id_equip"], item["nome"], item["responsavel"], item["setor"],
-                                        tipo_enum)
-                    elif tipo_enum == TipoEquipamento.SERVIDOR:
-                        eq = Aplicativo(item["id_equip"], item["nome"], item["responsavel"], item["setor"],
-                                      tipo_enum)
+                        eq = BancoDados(item["id_equip"], item["nome"], item["responsavel"], item["setor"], tipo_enum)
+                    elif tipo_enum == TipoEquipamento.APLICACAO_WEB:
+                        eq = Aplicativo(item["id_equip"], item["nome"], item["responsavel"], item["setor"], tipo_enum)
                     else:
-                        eq = Equipamento(item["id_equip"], item["nome"], item["responsavel"], item["setor"],
-                                         tipo_enum)
+                        eq = Equipamento(item["id_equip"], item["nome"], item["responsavel"], item["setor"], tipo_enum)
 
                     for v in item.get("vulnerabilidades", []): #SE NÃO EXISTIR ELE RETORNA VAZIO EM VEZ DE CRASHAR
                         eq.vulnerabilidades.append(Vulnerabilidade(**v)) #** CONVERTE DICIONÁRIO EM OBJETO

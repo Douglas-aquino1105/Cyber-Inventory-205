@@ -21,7 +21,15 @@
         "responsavel": "juca",
         "setor": "ti",
         "tipo": 1,
-        "vulnerabilidades": []
+        "vulnerabilidades": [
+            {
+                "id_vuln": "RCE - Remote Code Execution",
+                "descricao": "Permite que o invasor execute comandos diretamente no sistema operacional do servidor web",
+                "categoria": "Remote Code Execution",
+                "severidade_cvss": 10.0,
+                "status": "em tratamento"
+            }
+        ]
     },
     {
         "id_equip": 3895,

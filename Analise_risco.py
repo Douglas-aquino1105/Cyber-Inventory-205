@@ -46,7 +46,7 @@ class AnalisadorDeRisco:
 
         # 3. Risco Próprio b = F * M * v (incorporando o polimorfismo do fator de exposição)
         F = np.diag([eq.fator_exposicao() for eq in equipamentos]) #DIAG CRIA MATRIZ DIAGONAL
-        b = F @ (M @ v) #B É O RESULTADO FINAL DE RISCO BRUTO INDIVIDUAL
+        b = F @ (M @ v) #b É O RESULTADO FINAL DE RISCO BRUTO INDIVIDUAL
 
         # 4. Matriz de Dependência A (n x n)
         A = np.zeros((n, n))
