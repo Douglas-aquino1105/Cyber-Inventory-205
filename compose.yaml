@@ -1,0 +1,18 @@
+services:
+  gerenciador:
+    build: .
+    container_name: trab02_2026_2_12621CBS205
+
+    restart: unless-stopped
+
+    ports:
+      - "2205:5000"
+
+    volumes:
+      - dados_trab02_2026_2_12621CBS205:/app/data
+
+    stdin_open: true
+    tty: true
+
+volumes:
+  dados_trab02_2026_2_12621CBS205:
