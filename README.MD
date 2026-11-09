@@ -30,13 +30,13 @@ Sistema desenvolvido em Python para gerenciamento de ativos, utilizando programa
 Clone o repositório:
 
 ```bash
-  git clone https://github.com/Douglas-aquino1105/Gerenciador-OOP-2
+  git clone https://github.com/Douglas-aquino1105/Cyber-Inventory-205
 ```
 
 Entre na pasta do projeto:
 
 ```bash
-  cd Gerenciador--OOP-2
+  cd Cyber-Inventory-205
 ```
 
 Construa a imagem e inicie o container:
