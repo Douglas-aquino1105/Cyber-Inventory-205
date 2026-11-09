@@ -64,6 +64,12 @@ Parar e remover os containers:
 ```bash
   docker compose down
 ```
+Interagir com o container:
+
+```bash
+  docker attach --detach-keys="ctrl-x" trab02_2026_2_12621CBS205
+```
+Para cancelar a interação com o container pressione `ctrl+x`
 
 ## Persistência de dados
 
