@@ -69,6 +69,8 @@ Interagir com o container:
 ```bash
   docker attach --detach-keys="ctrl-x" trab02_2026_2_12621CBS205
 ```
+Pressione ``9`` para ver as opções do app.
+
 Para cancelar a interação com o container pressione `ctrl+x`
 
 ## Persistência de dados
