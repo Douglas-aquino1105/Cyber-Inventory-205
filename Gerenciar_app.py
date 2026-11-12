@@ -3,7 +3,7 @@ import unicodedata
 import time
 import pyfiglet
 
-from Ativos import Equipamento, ServidorWeb, BancoDados, Aplicativo, Vulnerabilidade, TipoEquipamento, gerador_id_random, Setor, RESPONSAVEIS
+from Ativos import Equipamento, ServidorWeb, BancoDados, Aplicativo, Vulnerabilidade, TipoEquipamento, gerador_id_random, ids_numericos, Setor, RESPONSAVEIS
 from Arquivos import InventarioRepository
 from Analise_risco import AnalisadorDeRisco
 
@@ -281,16 +281,28 @@ class CLI:
             print(f"{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
             return
 
-        id_vuln = self._ler_texto_nao_vazio(f"{AZUL}Nome da vulnerabilidade (ex: CVE-2021-44228 ou V1):{RESET} ")
+        print(f"\n{AMARELO}ID da vulnerabilidade sendo gerado automaticamente!{RESET}")
+        id_vuln = Vulnerabilidade.novo_id(self._ids_vulnerabilidades_existentes())
+        print(f"{AZUL}ID gerado:{RESET} {VERDE}{id_vuln}{RESET}")
+
+        nome = self._ler_texto_nao_vazio(f"{AZUL}Nome da vulnerabilidade (ex: CVE-2021-44228 ou V1):{RESET} ")
         descricao = self._ler_texto_nao_vazio(f"{AZUL}Descrição da falha:{RESET} ")
         categoria = self._ler_texto_nao_vazio(f"{AZUL}Categoria (ex: CWE-89, Configuração):{RESET} ")
         severidade = self._ler_float(f"{AZUL}Nota de Severidade CVSS (0.0 a 10.0):{RESET} ")
         status = self._ler_texto_nao_vazio(f"{AZUL}Status (Aberta, Em tratamento, Corrigida, Risco aceito):{RESET} ")
 
-        vuln = Vulnerabilidade(id_vuln, descricao, categoria, severidade, status)
+        vuln = Vulnerabilidade(id_vuln, descricao, categoria, severidade, status, nome)
         ativo.vulnerabilidades.append(vuln)
         self.repo.salvar()
-        print(f"\n{VERDE}[Sucesso]{RESET} Vulnerabilidade associada ao ativo com sucesso!")
+        print(f"\n{VERDE}[Sucesso]{RESET} Vulnerabilidade '{AZUL}{nome}{RESET}' associada ao ativo com ID {VERDE}{vuln.id_vuln}{RESET}!")
+
+    def _ids_vulnerabilidades_existentes(self):
+        """Reúne os IDs numéricos já usados, no mesmo critério de unicidade dos ativos."""
+        ids = []
+        for equipamento in self.repo.equipamentos_by_id.values():
+            for vuln in equipamento.vulnerabilidades:
+                ids.append(vuln.id_vuln)
+        return ids_numericos(ids)
 
     def _remover_vulnerabilidade(self):
         print(f"\n--- {VERMELHO}Remover{RESET} Vulnerabilidade ---")
@@ -314,14 +326,15 @@ class CLI:
         print(f"\n{AZUL}Vulnerabilidades de {ativo.nome}:{RESET}")
         for v in ativo.vulnerabilidades:
             print(
-                f"- {AZUL}[{v.id_vuln}]{RESET} CVSS: {AMARELO}{v.severidade_cvss}{RESET} | Status: {AMARELO}{v.status}{RESET}")
+                f"- {AZUL}{v.identificacao()}{RESET} CVSS: {AMARELO}{v.severidade_cvss}{RESET} | Status: {AMARELO}{v.status}{RESET}")
 
-        escolha = normalizar_texto(input(f"\n{AZUL}Nome da vulnerabilidade a remover:{RESET} "))
+        escolha = normalizar_texto(input(f"\n{AZUL}ID ou nome da vulnerabilidade a remover:{RESET} "))
 
         # Compara os dois lados normalizados (ignora maiúsculas/minúsculas e espaços)
         vuln = None
         for v in ativo.vulnerabilidades:
-            if normalizar_texto(v.id_vuln) == escolha:
+            nome = getattr(v, "nome", "") or ""
+            if normalizar_texto(v.id_vuln) == escolha or (nome and normalizar_texto(nome) == escolha):
                 vuln = v
                 break
 
@@ -332,7 +345,7 @@ class CLI:
         while True:
             certeza = normalizar_texto(input(
                 f"Tem certeza de que deseja {VERMELHO}remover{RESET} a vulnerabilidade "
-                f"{AZUL}'{vuln.id_vuln}'{RESET} de '{ativo.nome}'? "
+                f"{AZUL}'{vuln.identificacao()}'{RESET} de '{ativo.nome}'? "
                 f"Essa operação {VERMELHO}NÃO{RESET} pode ser desfeita: Y/N\n-> "))
 
             if certeza in ["sim", "s", "yes", "y"]:
@@ -364,7 +377,7 @@ class CLI:
 
         print(f"\n--- {AZUL}Vulnerabilidades do Ativo: {ativo.nome}{RESET} ---")
         for v in ativo.vulnerabilidades:
-            print(f"- {AZUL}[{v.id_vuln}]{RESET} CVSS: {AMARELO}{v.severidade_cvss}{RESET} | Status: {AMARELO}{v.status}{RESET}")
+            print(f"- {AZUL}{v.identificacao()}{RESET} CVSS: {AMARELO}{v.severidade_cvss}{RESET} | Status: {AMARELO}{v.status}{RESET}")
             print(f"  {AZUL}Descrição:{RESET} {v.descricao} | {AZUL}Categoria:{RESET} {v.categoria}")
 
     def _gerenciar_dependencias(self):

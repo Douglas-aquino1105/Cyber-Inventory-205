@@ -10,6 +10,15 @@ def gerador_id_random(ids_existentes) -> int:
         if id_novo not in conjunto_ids:
             return id_novo
 
+def ids_numericos(ids_existentes):
+    """Mantém só IDs numéricos, para reutilizar gerador_id_random com registros antigos em texto."""
+    ids = []
+    for identificador in ids_existentes:
+        texto = str(identificador).strip()
+        if texto.isdigit():
+            ids.append(int(texto))
+    return ids
+
 class Setor(Enum):
     TI = "TI"
     FINANCEIRO = "Financeiro"
@@ -28,10 +37,22 @@ class TipoEquipamento(Enum):
 class Vulnerabilidade:
     def __init__(self, id_vuln: str, descricao: str, categoria: str, severidade_cvss: float, status: str = "Aberta", nome: str = ""):
         self.id_vuln = id_vuln
+        self.nome = nome
         self.descricao = descricao
         self.categoria = categoria
         self.severidade_cvss = float(severidade_cvss)
         self.status = status  # Ex: Aberta, Em tratamento, Corrigida, Risco aceito
+
+    @classmethod
+    def novo_id(cls, ids_existentes) -> int:
+        """Reserva um ID único com a mesma função usada no cadastro de ativos."""
+        return gerador_id_random(ids_numericos(ids_existentes))
+
+    def identificacao(self) -> str:
+        nome = getattr(self, "nome", "") or ""
+        if nome:
+            return f"[{self.id_vuln}] {nome}"
+        return f"[{self.id_vuln}]"
 
     def to_dict(self):
         return self.__dict__
