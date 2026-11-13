@@ -8,6 +8,7 @@
         "vulnerabilidades": [
             {
                 "id_vuln": "sql injection",
+                "nome": "",
                 "descricao": "atacante tem acesso a base de dados e em alguns casos pode comprometer a confidentiality...",
                 "categoria": "configuração",
                 "severidade_cvss": 9.0,
@@ -24,6 +25,7 @@
         "vulnerabilidades": [
             {
                 "id_vuln": "RCE - Remote Code Execution",
+                "nome": "",
                 "descricao": "Permite que o invasor execute comandos diretamente no sistema operacional do servidor web",
                 "categoria": "Remote Code Execution",
                 "severidade_cvss": 10.0,
@@ -38,5 +40,22 @@
         "setor": "adm",
         "tipo": 3,
         "vulnerabilidades": []
+    },
+    {
+        "id_equip": 874,
+        "nome": "basededadosmysql",
+        "responsavel": "Carla Dias",
+        "setor": "Comercial",
+        "tipo": 2,
+        "vulnerabilidades": [
+            {
+                "id_vuln": 9991,
+                "nome": "SQL injection",
+                "descricao": "SQL injection vulnerability, by which an attacker could send a specially designed query through user_id parameter in /jobportal/admin/user/controller.php, and retrieve all the information stored in it.",
+                "categoria": "Configuração",
+                "severidade_cvss": 7.5,
+                "status": "em tratamento"
+            }
+        ]
     }
 ]

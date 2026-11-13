@@ -43,12 +43,16 @@ class CLI:
 
         while True:
             entrada = input(f"{AZUL}Escolha uma opção{dica}:{RESET} ").strip()
+            entrada = normalizar_texto(entrada)
 
             if not entrada and atual is not None:
                 return atual
 
             if entrada.isdigit() and 1 <= int(entrada) <= len(opcoes):
                 return opcoes[int(entrada) - 1]
+
+            if entrada == "quit":
+                return "quit"
 
             print(f"{VERMELHO}[Erro]{RESET} Opção inválida.")
 
@@ -112,12 +116,18 @@ class CLI:
 
     # --- Métodos Auxiliares de Validação ---
 
-    def _ler_int(self, mensagem: str) -> int:
-        """Lê um número inteiro com tratamento de exceção."""
+    def _ler_int(self, mensagem: str) -> int | str:
+        """Lê um número inteiro ou retorna 'quit'."""
         while True:
             try:
-                valor = int(input(mensagem).strip())
+                entrada = input(mensagem).strip()
+
+                if entrada.lower() == "quit":
+                    return "quit"
+
+                valor = int(entrada)
                 return valor
+
             except ValueError:
                 print(f"{VERMELHO}[Erro]{RESET} Entrada inválida. Por favor, digite um número inteiro.")
 
@@ -222,54 +232,74 @@ class CLI:
 
     def _atualizar_ativo(self):
 
-        mostrar_ativos(self)
-        print(f"\n--- {AMARELO}Atualizar Ativo{RESET} ---")
-        id_equip = self._ler_int(f"{AZUL}ID do ativo a atualizar:{RESET} ")
-        ativo = self.repo.buscar_por_id(id_equip)
+        while True:
+            mostrar_ativos(self)
+            print(f"\n--- {AMARELO}Atualizar Ativo{RESET} ---")
+            id_equip = self._ler_int(f"{AZUL}ID do ativo a atualizar:{RESET} ")
+            if id_equip == "quit":
+                break
+            ativo = self.repo.buscar_por_id(id_equip)
 
-        if not ativo:
-            print(f"{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
-            return
+            if not ativo:
+                print(f"{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
+                return
 
-        print(f"{AMARELO}Atualizando o ativo '{ativo.nome}'. Deixe em branco para manter o valor atual.{RESET}")
+            print(f"{AMARELO}Atualizando o ativo '{ativo.nome}'. Deixe em branco para manter o valor atual.{RESET}")
 
-        ativo.responsavel = self._escolher_opcao(
-            "Responsáveis disponíveis:", RESPONSAVEIS, atual=ativo.responsavel)
+            ativo.responsavel = self._escolher_opcao(
+                "Responsáveis disponíveis:", RESPONSAVEIS, atual=ativo.responsavel)
+            if ativo.responsavel == "quit":
+                break
 
-        ativo.setor = self._escolher_opcao(
-            "Setores disponíveis:", [s.value for s in Setor], atual=ativo.setor)
+            ativo.setor = self._escolher_opcao(
+                "Setores disponíveis:", [s.value for s in Setor], atual=ativo.setor)
+            if ativo.setor == "quit":
+                break
 
-        self.repo.salvar()
-        print(f"\n{VERDE}[Sucesso]{RESET} Dados do ativo atualizados com sucesso!")
+            self.repo.salvar()
+            print(f"\n{VERDE}[Sucesso]{RESET} Dados do ativo atualizados com sucesso!")
+
+            continuar = input(f"Deseja modificar outro ativo? {AZUL}Y{RESET}/{VERMELHO}N{RESET} ")
+            continuar = normalizar_texto(continuar)
+            if continuar not in ["yes","y","sim","s"]:
+                break
 
     def _remover_ativo(self):
 
-        mostrar_ativos(self)
-
-        print(f"\n--- {VERMELHO}Remover Ativo{RESET} ---")
-        id_equip = self._ler_int(f"ID do ativo a {VERMELHO}remover:{RESET} ")
-        ativo = self.repo.buscar_por_id(id_equip)
-
-        if not ativo:
-            print(f"\n{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
-            return
-
         while True:
-            certeza = input(f"Tem certeza de que deseja {VERMELHO}remover{RESET} o ativo {AZUL}'{id_equip}.{ativo.nome.capitalize()}'{RESET}? Essa operação {VERMELHO}não{RESET} pode ser desfeita: Y/N\n-> ")
-            certeza = normalizar_texto(certeza)
-            if certeza in ["sim", "s", "yes", "y"]:
-                if self.repo.deletar(id_equip):
-                    print(f"\n{VERDE}[Sucesso]{RESET} Ativo e suas vulnerabilidades foram {VERMELHO}removidos{RESET} da base.")
+            mostrar_ativos(self)
+
+            print(f"\n--- {VERMELHO}Remover Ativo{RESET} ---")
+            id_equip = self._ler_int(f"ID do ativo a {VERMELHO}remover:{RESET} ")
+            if id_equip == "quit":
+                break
+            ativo = self.repo.buscar_por_id(id_equip)
+
+            if not ativo:
+                print(f"\n{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
+                return
+
+            while True:
+                certeza = input(f"Tem certeza de que deseja {VERMELHO}remover{RESET} o ativo {AZUL}'{id_equip}.{ativo.nome.capitalize()}'{RESET}? Essa operação {VERMELHO}não{RESET} pode ser desfeita: Y/N\n-> ")
+                certeza = normalizar_texto(certeza)
+                if certeza in ["sim", "s", "yes", "y"]:
+                    if self.repo.deletar(id_equip):
+                        print(f"\n{VERDE}[Sucesso]{RESET} Ativo e suas vulnerabilidades foram {VERMELHO}removidos{RESET} da base.")
+                        time.sleep(1.5)
+                    else:
+                        print(f"\n{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
+                    break
+                elif certeza in ["nao", "n", "no", "nope"]:
+                    print(f"Operação {VERMELHO}cancelada!{RESET}")
                     time.sleep(1.5)
+                    break
                 else:
-                    print(f"\n{VERMELHO}[Erro]{RESET} Ativo não encontrado.")
-                break
-            elif certeza in ["nao", "n", "no", "nope"]:
-                print(f"Operação {VERMELHO}cancelada!{RESET}")
-                time.sleep(1.5)
-                break
-            else:
-                print("Escolha uma opção válida!")
+                    print("Escolha uma opção válida!")
+
+                continuar = input(f"Deseja {VERMELHO}remover{RESET} outro ativo? {AZUL}Y{RESET}/{VERMELHO}N{RESET} ")
+                continuar = normalizar_texto(continuar)
+                if continuar not in ["yes", "y", "sim", "s"]:
+                    break
 
     def _cadastrar_vulnerabilidade(self):
         print(f"\n--- {VERDE}Cadastrar Vulnerabilidade{RESET} ---")
