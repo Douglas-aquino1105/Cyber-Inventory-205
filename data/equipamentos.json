@@ -55,6 +55,14 @@
                 "categoria": "Configuração",
                 "severidade_cvss": 7.5,
                 "status": "em tratamento"
+            },
+            {
+                "id_vuln": 1708,
+                "nome": "CVE-2026-9855",
+                "descricao": "sql injection",
+                "categoria": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                "severidade_cvss": 6.5,
+                "status": "corrigida"
             }
         ]
     }
