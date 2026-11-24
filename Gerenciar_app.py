@@ -6,6 +6,7 @@ import pyfiglet
 from Ativos import Equipamento, ServidorWeb, BancoDados, Aplicativo, Vulnerabilidade, TipoEquipamento, gerador_id_random, ids_numericos, Setor, RESPONSAVEIS
 from Arquivos import InventarioRepository
 from Analise_risco import AnalisadorDeRisco
+from services.Requisicoes_API import VulnerabilidadeAPI
 
 VERMELHO = "\033[31m"
 VERDE = "\033[32m"
@@ -315,13 +316,56 @@ class CLI:
         id_vuln = Vulnerabilidade.novo_id(self._ids_vulnerabilidades_existentes())
         print(f"{AZUL}ID gerado:{RESET} {VERDE}{id_vuln}{RESET}")
 
-        nome = self._ler_texto_nao_vazio(f"{AZUL}Nome da vulnerabilidade (ex: CVE-2021-44228 ou V1):{RESET} ")
-        descricao = self._ler_texto_nao_vazio(f"{AZUL}Descrição da falha:{RESET} ")
-        categoria = self._ler_texto_nao_vazio(f"{AZUL}Categoria (ex: CWE-89, Configuração):{RESET} ")
-        severidade = self._ler_float(f"{AZUL}Nota de Severidade CVSS (0.0 a 10.0):{RESET} ")
-        status = self._ler_texto_nao_vazio(f"{AZUL}Status (Aberta, Em tratamento, Corrigida, Risco aceito):{RESET} ")
+        nome = self._ler_texto_nao_vazio(
+            f"{AZUL}CVE da vulnerabilidade (ex: CVE-2021-44228):{RESET} "
+        )
 
-        vuln = Vulnerabilidade(id_vuln, descricao, categoria, severidade, status, nome)
+        # Consulta a NVD
+        dados_cve = VulnerabilidadeAPI.buscar_cve(nome)
+
+        if dados_cve is None:
+            print(f"{VERMELHO}CVE não encontrado.{RESET}")
+            return
+
+        # Obtém a descrição automaticamente
+        descricao = "Descrição não disponível."
+
+        for item in dados_cve.get("descriptions", []):
+            if item.get("lang") == "en":
+                descricao = item["value"]
+                print(f"{AZUL}Descrição da vulnerabilidade:{RESET} {descricao}")
+                break
+
+        # Extrai os identificadores CWE
+        cwes = VulnerabilidadeAPI.extrair_cwes(dados_cve)
+
+        # Consulta a MITRE para obter os nomes e descrições dos CWEs
+        descricoes_cwe = VulnerabilidadeAPI.buscar_descricoes_cwe(cwes)
+
+        # Define a categoria com os identificadores encontrados
+        if descricoes_cwe:
+            categoria = ", ".join(cwe["cwe"] for cwe in descricoes_cwe)
+            print(f"{AZUL}CWEs encontrados:{RESET}")
+            for cwe in descricoes_cwe:
+                print(f"{cwe['cwe']} - {cwe['nome']}")
+        else:
+            categoria = "Não identificada"
+
+        # Continua a entrada manual dos demais dados
+        dados_cvss = VulnerabilidadeAPI.buscar_cvss(dados_cve)
+        score_cvss = dados_cvss.get("baseScore", 10) #assume como 10 o cvss quando a api não consegue achar o valor
+        print(f"{AZUL}Score CVSS versão {dados_cvss["version"]}:{RESET} {score_cvss}")
+        print(f"{AZUL}Severidade:{RESET} {dados_cvss["baseSeverity"]}")
+
+        # severidade = self._ler_float(
+        #     f"{AZUL}Nota de Severidade CVSS (0.0 a 10.0):{RESET} "
+        # )
+
+        status = self._ler_texto_nao_vazio(
+            f"{AZUL}Status (Aberta, Em tratamento, Corrigida, Risco aceito):{RESET} "
+        )
+
+        vuln = Vulnerabilidade(id_vuln, descricao, categoria, score_cvss, status, nome) #mudei severidade para score_cvss,se der problema é isso
         ativo.vulnerabilidades.append(vuln)
         self.repo.salvar()
         print(f"\n{VERDE}[Sucesso]{RESET} Vulnerabilidade '{AZUL}{nome}{RESET}' associada ao ativo com ID {VERDE}{vuln.id_vuln}{RESET}!")

@@ -27,9 +27,18 @@ try:
         print("Vulnerabilidade não encontrada.")
 
     else:
+        lista_cwes = []
+
         # Acessa a primeira vulnerabilidade
         cve_dados = dados["vulnerabilities"][0]["cve"]
-        print(dados)
+        weaknesses = cve_dados.get("weaknesses", [])
+        for weakness in weaknesses:
+            for descrição in weakness.get("description"):
+                if descrição["lang"] == "en":
+                    #print(descrição["value"])
+                    lista_cwes.append(descrição["value"])
+
+        print(f"{lista_cwes[0]}\n{lista_cwes[1]}")
 
         print("\n--- VULNERABILIDADE ---")
 
