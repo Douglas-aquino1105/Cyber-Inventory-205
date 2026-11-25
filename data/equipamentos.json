@@ -2,7 +2,7 @@
     {
         "id_equip": 3757,
         "nome": "servidorlinux",
-        "responsavel": "Bruno Lima",
+        "responsavel": "Ana Souza",
         "setor": "TI",
         "tipo": 1,
         "vulnerabilidades": [
@@ -13,6 +13,14 @@
                 "categoria": "CWE-78",
                 "severidade_cvss": 8.8,
                 "status": "Aberta"
+            },
+            {
+                "id_vuln": 2338,
+                "nome": "CVE-2026-9785",
+                "descricao": "Quest NetVault Backup NVBULibrarySlot SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBULibrarySlot JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27630.",
+                "categoria": "CWE-89",
+                "severidade_cvss": 8.8,
+                "status": "Em tratamento"
             }
         ]
     },
@@ -30,6 +38,14 @@
                 "categoria": "CWE-89",
                 "severidade_cvss": 8.8,
                 "status": "Em tratamento"
+            },
+            {
+                "id_vuln": 1494,
+                "nome": "CVE-2026-97225",
+                "descricao": "A flaw has been found in DbGate up to 7.2.5-beta.5. This affects an unknown function of the file packages/api/src/controllers/runners.js of the component JSON Runner. Executing a manipulation of the argument comment.text/script.schedule can lead to code injection. The attack may be performed from remote. Upgrading to version 7.2.5-beta.6 mitigates this issue. This patch is called 70e7b6b58e464d7a015ba16e8d7574b420ee4877. Upgrading the affected component is advised. This issue is distinct from CVE-2026-47668.",
+                "categoria": "CWE-74, CWE-94",
+                "severidade_cvss": 5.3,
+                "status": "Corrigida"
             }
         ]
     }
