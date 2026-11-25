@@ -27,6 +27,12 @@ Sistema desenvolvido em Python para gerenciamento de ativos, utilizando programa
 
 ## Como executar
 
+Conecte-se ao servidor:
+
+```bash
+  ssh 12621CBS200@10.0.99.150
+```
+
 Clone o repositório:
 
 ```bash
