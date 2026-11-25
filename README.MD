@@ -30,7 +30,7 @@ Sistema desenvolvido em Python para gerenciamento de ativos, utilizando programa
 Conecte-se ao servidor:
 
 ```bash
-  ssh 12621CBS200@10.0.99.150
+  ssh 12621CBS205@10.0.99.150
 ```
 
 Clone o repositório:
