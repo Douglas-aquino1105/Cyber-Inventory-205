@@ -1,76 +1,35 @@
 [
     {
-        "id_equip": 7053,
-        "nome": "basededadossql",
-        "responsavel": "Ana Souza",
+        "id_equip": 3757,
+        "nome": "servidorlinux",
+        "responsavel": "Bruno Lima",
         "setor": "TI",
-        "tipo": 2,
+        "tipo": 1,
         "vulnerabilidades": [
             {
-                "id_vuln": "sql injection",
-                "nome": "",
-                "descricao": "atacante tem acesso a base de dados e em alguns casos pode comprometer a confidentiality...",
-                "categoria": "configuração",
-                "severidade_cvss": 9.0,
-                "status": "aberta"
-            },
-            {
-                "id_vuln": 9714,
-                "nome": "CVE-2026-97885",
-                "descricao": "A flaw has been found in mathurvishal CloudClassroom-PHP-Project up to 5dadec098bfbbf3300d60c3494db3fb95b66e7be. Affected is an unknown function of the file updatefaculty.php. This manipulation of the argument fid causes sql injection. The attack may be initiated remotely. The exploit has been published and may be used. This product uses a rolling release model to deliver continuous updates. As a result, specific version information for affected or updated releases is not available. The vendor was contacted early about this disclosure but did not respond in any way.",
-                "categoria": "CWE-74, CWE-89",
-                "severidade_cvss": 5.5,
+                "id_vuln": 4644,
+                "nome": "CVE-2026-9787",
+                "descricao": "Quest NetVault Backup NVBULogDaemon Command Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBULogDaemon JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to execute a system call. An attacker can leverage this vulnerability to execute code in the context of SYSTEM. Was ZDI-CAN-27625.",
+                "categoria": "CWE-78",
+                "severidade_cvss": 8.8,
                 "status": "Aberta"
             }
         ]
     },
     {
-        "id_equip": 5324,
-        "nome": "servidorlinux2",
-        "responsavel": "juca",
-        "setor": "ti",
-        "tipo": 1,
-        "vulnerabilidades": [
-            {
-                "id_vuln": "RCE - Remote Code Execution",
-                "nome": "",
-                "descricao": "Permite que o invasor execute comandos diretamente no sistema operacional do servidor web",
-                "categoria": "Remote Code Execution",
-                "severidade_cvss": 10.0,
-                "status": "em tratamento"
-            }
-        ]
-    },
-    {
-        "id_equip": 3895,
-        "nome": "app21123",
-        "responsavel": "juca",
-        "setor": "adm",
-        "tipo": 3,
-        "vulnerabilidades": []
-    },
-    {
-        "id_equip": 874,
-        "nome": "basededadosmysql",
-        "responsavel": "Carla Dias",
-        "setor": "Comercial",
+        "id_equip": 4843,
+        "nome": "basededadosjson",
+        "responsavel": "João da Silva",
+        "setor": "TI",
         "tipo": 2,
         "vulnerabilidades": [
             {
-                "id_vuln": 9991,
-                "nome": "SQL injection",
-                "descricao": "SQL injection vulnerability, by which an attacker could send a specially designed query through user_id parameter in /jobportal/admin/user/controller.php, and retrieve all the information stored in it.",
-                "categoria": "Configuração",
-                "severidade_cvss": 7.5,
-                "status": "em tratamento"
-            },
-            {
-                "id_vuln": 1708,
-                "nome": "CVE-2026-9855",
-                "descricao": "sql injection",
-                "categoria": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
-                "severidade_cvss": 6.5,
-                "status": "corrigida"
+                "id_vuln": 206,
+                "nome": "CVE-2026-9786",
+                "descricao": "Quest NetVault Backup NVBUDashboard SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBUDashboard JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27626.",
+                "categoria": "CWE-89",
+                "severidade_cvss": 8.8,
+                "status": "Em tratamento"
             }
         ]
     }

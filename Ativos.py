@@ -28,9 +28,7 @@ class Setor(Enum):
 RESPONSAVEIS = ["Ana Souza", "Bruno Lima", "Carla Dias", "João da Silva"]
 
 class TipoEquipamento(Enum):
-    #NOTEBOOK = 1
     SERVIDOR = 1
-    #ROTEADOR = 3
     BANCO_DADOS = 2
     APLICACAO_WEB = 3
 

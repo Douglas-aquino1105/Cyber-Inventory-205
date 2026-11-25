@@ -182,11 +182,11 @@ class CLI:
             return
 
         # Instanciação com herança/polimorfismo
-        if tipo_enum == TipoEquipamento.APLICACAO_WEB:
+        if tipo_enum == TipoEquipamento.SERVIDOR:
             novo_ativo = ServidorWeb(id_equip, hostname, responsavel, setor, tipo_enum)
         elif tipo_enum == TipoEquipamento.BANCO_DADOS:
             novo_ativo = BancoDados(id_equip, hostname, responsavel, setor, tipo_enum)
-        elif tipo_enum == TipoEquipamento.SERVIDOR:
+        elif tipo_enum == TipoEquipamento.APLICACAO_WEB:
             novo_ativo = Aplicativo(id_equip, hostname, responsavel, setor, tipo_enum)
         else:
             novo_ativo = Equipamento(id_equip, hostname, responsavel, setor, tipo_enum)
