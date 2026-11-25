@@ -2,6 +2,7 @@ import sys
 import unicodedata
 import time
 import pyfiglet
+import textwrap
 
 from Ativos import Equipamento, ServidorWeb, BancoDados, Aplicativo, Vulnerabilidade, TipoEquipamento, gerador_id_random, ids_numericos, Setor, RESPONSAVEIS
 from Arquivos import InventarioRepository
@@ -333,7 +334,7 @@ class CLI:
         for item in dados_cve.get("descriptions", []):
             if item.get("lang") == "en":
                 descricao = item["value"]
-                print(f"{AZUL}Descrição da vulnerabilidade:{RESET} {descricao}")
+                print(f"{AZUL}Descrição da vulnerabilidade:{RESET} {textwrap.fill(descricao, width=80)}")
                 break
 
         # Extrai os identificadores CWE

@@ -12,20 +12,37 @@ class VulnerabilidadeAPI:
     @staticmethod
     def buscar_cve(cve):
 
-        resposta = requests.get(
-            VulnerabilidadeAPI.NVD_URL,
-            params={"cveId": cve},
-            timeout=15
-        )
+        # Verifica se o formato do CVE é válido
+        cve = cve.strip().upper()
 
-        resposta.raise_for_status()
-
-        dados = resposta.json()
-
-        if dados["totalResults"] == 0:
+        if not re.fullmatch(r"CVE-\d{4}-\d{4,}", cve):
+            print("[Erro] Formato de CVE inválido.")
             return None
 
-        return dados["vulnerabilities"][0]["cve"]
+        try:
+            resposta = requests.get(
+                VulnerabilidadeAPI.NVD_URL,
+                params={"cveId": cve},
+                timeout=15
+            )
+
+            resposta.raise_for_status()
+
+            dados = resposta.json()
+
+            if dados.get("totalResults", 0) == 0:
+                print("[Erro] CVE não encontrado.")
+                return None
+
+            return dados["vulnerabilities"][0]["cve"]
+
+        except requests.exceptions.RequestException as erro:
+            print(f"[Erro] Falha na comunicação com a API: {erro}")
+            return None
+
+        except (ValueError, KeyError, IndexError, TypeError) as erro:
+            print(f"[Erro] Não foi possível interpretar a resposta da API: {erro}")
+            return None
 
     @staticmethod
     def extrair_cwes(cve_dados):
